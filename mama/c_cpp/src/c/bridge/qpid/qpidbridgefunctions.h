@@ -135,6 +135,20 @@ extern const char*
 qpidBridge_getVersion (void);
 
 /**
+ * @brief Provides information about the bridges properties, as a wproperty_t 
+ *        object.
+ *
+ * Requirement: Required.
+ *
+ * @param[out] properties The wproperty_t object containing the required
+ *             properties.
+ *
+ * @return mama_status indicating the success or failure of the load.
+ */
+extern mama_status
+qpidBridge_getBridgeProperties (wproperty_t* properties);
+
+/**
  * This function will return the name of this bridge implementation.
  *
  * Requirement: Required

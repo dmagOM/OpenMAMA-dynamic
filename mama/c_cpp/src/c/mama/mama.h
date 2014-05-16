@@ -139,6 +139,29 @@ extern "C"
     extern mama_status
     mama_loadPayloadBridge (mamaPayloadBridge*  bridge,  const char* payloadName);
 
+
+    /**
+     * @brief Used to load mama plugin shared objects
+     *
+     * param[in] plugin The mama plugin object.
+     * param[in] pluginName The name of the mama plugin to be loaded.
+     *
+     * @return mama_status return code can be one of:
+     *              MAMA_STATUS_NULL_ARG
+     *              MAMA_STATUS_NO_BRIDGE_IMPL
+     *              MAMA_STATUS_SYSTEM_ERROR
+     *              MAMA_STATUS_OK
+     */
+    MAMAExpDLL
+    extern mama_status
+    mama_loadPlugin  (mamaPlugin* plugin, const char*        pluginName);
+
+    MAMAExpDLL
+    extern mama_status
+    mama_loadPluginWithPath (mamaPlugin* plugin,
+                             const char* pluginName,
+                             const char* path);
+
     /** Load the bridge specified by middleware string using the path specified by the user.
      * If the bridge has already been loaded then the existing bridge instance
      * will be returned.
@@ -151,6 +174,12 @@ extern "C"
     MAMAExpDLL
     extern mama_status
     mama_loadBridgeWithPath (mamaBridge* impl, const char*  middleware, const char* path);
+
+    MAMAExpDLL
+    extern mama_status
+    mama_loadPayloadBridgeWithPath (mamaPayloadBridge* impl,
+                                    const char* payloadName,
+                                    const char* path);
 
     #define MAMA_LINK_BRIDGE(implIdentifier, impl)                  \
     do                                                              \

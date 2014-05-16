@@ -275,6 +275,17 @@ typedef const char* (*bridge_getVersion)(void);
 typedef const char* (*bridge_getName)(void);
 typedef mama_status (*bridge_getDefaultPayloadId)(char***name, char** id);
 
+/**
+ * Used to return various bridge related properties, which OpenMAMA may then
+ * query for information used during bridge management.
+ *
+ * @param[out] properties A wproperties_t object containing the required
+ *             properties data.
+ *
+ * @return mama_status indicating the success or failure of the call.
+ */
+typedef mama_status (*bridge_getBridgeProperties)(wproperty_t* properties);
+
 /*===================================================================
  =               mamaQueue bridge function pointers                 =
  ====================================================================*/
@@ -680,6 +691,9 @@ typedef mama_status
 typedef mama_status
 (*bridgeMamaMsg_destroyReplyHandle) (void* result);
 
+typedef mama_status
+(*bridge_additionalMethodTest)(int test);
+
 /*
    The structure of function pointers to specific implementations of bridge
    functions.
@@ -714,6 +728,11 @@ typedef struct mamaBridgeImpl_
     /* Needed to call the C++ bridge callback.  Can't use the closure since it's
        used when getting the default queue */
     void*     mCppCallback;
+
+    /* Properties object used to store various properties of the middleware
+     * bridge.
+     */
+    wproperty_t bridgeProperties;
 
     /*Used in mama.c*/
     bridge_open         			bridgeOpen;
@@ -838,6 +857,8 @@ typedef struct mamaBridgeImpl_
     bridgeMamaMsgImpl_setReplyHandle        bridgeMamaMsgSetReplyHandle;
     bridgeMamaMsgImpl_setReplyHandle        bridgeMamaMsgSetReplyHandleAndIncrement;
     bridgeMamaMsg_destroyReplyHandle        bridgeMamaMsgDestroyReplyHandle;
+    bridge_additionalMethodTest             bridgeAdditionalMethodTest;
+    bridge_getBridgeProperties              bridgeGetBridgeProperties;
 } mamaBridgeImpl;
 
 /*Functions for internal use only. Will be used from the C++ layer.*/

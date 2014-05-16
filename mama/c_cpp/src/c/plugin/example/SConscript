@@ -1,0 +1,25 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+import os
+Import('*')
+env = env.Clone()
+
+target = 'libmamapluginexample'
+
+includePath = []
+includePath.append('.')
+includePath.append('../..')
+
+libPath = []
+
+env.Append(LIBS=['mama'], LIBPATH=libPath, CPPPATH=[includePath])
+
+env.Append(CFLAGS=['-Werror'])
+
+sources = Glob('*.c')
+
+lib = []
+lib.append(env.SharedLibrary(target, sources))
+lib.append(env.StaticLibrary(target, sources))
+
+Alias('install', env.Install('$libdir', lib))

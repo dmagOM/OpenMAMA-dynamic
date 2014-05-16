@@ -54,6 +54,8 @@ InstMamaInclude = \
 	mama/transport.h 
 	mama/types.h 
 	mama/version.h
+	mama/loadcallbacks.h
+	mama/librarymanager.h
 """)
 
 InstConflInclude = Split("""
@@ -139,6 +141,9 @@ libmama_sources = \
     conflation/connection.c
     conflation/serverconnection.c
     conflation/manager.c
+    baseBridge.c
+    loadcallbacks.c
+    librarymanager.c
 """)
 
 objects = []
@@ -167,5 +172,6 @@ Alias('install', env.Install('$prefix/include/mama/conflation',
 
 env.SConscript('bridge/SConscript', 'env')
 env.SConscript('payload/SConscript', 'env')
+env.SConscript('plugin/SConscript', 'env')
 
 Clean(lib, 'version.c')

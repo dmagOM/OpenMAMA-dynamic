@@ -26,6 +26,7 @@
 
 #include <mama/mama.h>
 #include <timers.h>
+#include <property.h>
 #include "io.h"
 #include "qpidbridgefunctions.h"
 
@@ -49,6 +50,7 @@ static char         PAYLOAD_IDS[]           =   { MAMA_PAYLOAD_QPID, '\0' };
 /* Version identifiers */
 #define             QPID_BRIDGE_NAME            "qpid"
 #define             QPID_BRIDGE_VERSION         "1.0"
+#define             QPID_SUPPORTED_MAMA_VERSION "2.4.0"
 
 /* Name to be given to the default queue. Should be bridge-specific. */
 #define             QPID_DEFAULT_QUEUE_NAME     "QPID_DEFAULT_MAMA_QUEUE"
@@ -71,6 +73,7 @@ void qpidBridge_createImpl (mamaBridge* result)
     }
 
     /* Create the wrapping MAMA bridge */
+#if 0
     bridge = (mamaBridgeImpl*) calloc (1, sizeof (mamaBridgeImpl));
     if (NULL == bridge)
     {
@@ -85,6 +88,9 @@ void qpidBridge_createImpl (mamaBridge* result)
 
     /* Return the newly created bridge */
     *result = (mamaBridge) bridge;
+#endif
+
+    INITIALIZE_BRIDGE(((mamaBridgeImpl*)*result), qpid);
 }
 
 mama_status
@@ -172,11 +178,15 @@ qpidBridge_close (mamaBridge bridgeImpl)
     qpidBridgeMamaIoImpl_stop ();
 
     /* Wait for qpidBridge_start to finish before destroying implementation */
+#if 0
+    /* Commenting this out, since the new dynamic loader functionality will
+     * take care of the impl itself.
+     */
     if (NULL != bridgeImpl)
     {
         free (bridgeImpl);
     }
-
+#endif 
     return status;
 }
 
@@ -211,6 +221,18 @@ const char*
 qpidBridge_getVersion (void)
 {
     return QPID_BRIDGE_VERSION;
+}
+
+mama_status
+qpidBridge_getBridgeProperties (wproperty_t* properties)
+{
+    *properties = properties_Create ();
+
+    properties_AddString (*properties, "mama.qpid.version=1.0");
+    properties_AddString (*properties, "mama.qpid.supported_mama_version=2.4.0");
+    properties_AddString (*properties, "mama.qpid.default_payload=qpidmsg");
+
+    return MAMA_STATUS_OK;
 }
 
 const char*

@@ -26,6 +26,7 @@
 #include "wombat/port.h"
 #include <stdlib.h>
 #include <string.h>
+#include "mama/status.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -72,6 +73,11 @@ typedef struct mamaBridgeImpl_* mamaBridge;
  * The payload bridge implementation required for accessing messages
  */
 typedef struct mamaPayloadBridgeImpl_* mamaPayloadBridge;
+
+/**
+ * @brief Container for holding a mama plugin object
+ */
+typedef struct mamaPluginImpl_* mamaPlugin;
 
 /**
  * Flexible date/time format

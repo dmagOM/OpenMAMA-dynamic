@@ -507,6 +507,10 @@ qpidmsgPayload_createImpl (mamaPayloadBridge* result, char* identifier)
 {
     mamaPayloadBridgeImpl* impl = NULL;
 
+    if (NULL == result)
+        return MAMA_STATUS_NULL_ARG;
+
+#if 0
     impl = (mamaPayloadBridgeImpl*) calloc (1, sizeof (mamaPayloadBridgeImpl));
 
     if (NULL == impl)
@@ -523,6 +527,12 @@ qpidmsgPayload_createImpl (mamaPayloadBridge* result, char* identifier)
     INITIALIZE_PAYLOAD_BRIDGE (impl, qpidmsg);
 
     *result     = (mamaPayloadBridge)impl;
+
+#endif
+
+    INITIALIZE_PAYLOAD_BRIDGE (((mamaPayloadBridgeImpl*)*result), qpidmsg);
+    ((mamaPayloadBridgeImpl*)*result)->mClosure = NULL;
+
     *identifier = (char)MAMA_PAYLOAD_QPID;
 
     return MAMA_STATUS_OK;

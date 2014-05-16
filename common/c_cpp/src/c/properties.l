@@ -167,7 +167,7 @@ WS                  [ \t]
                                         fprintf( stderr, "key: %s value: %s\n", 
                                         curKey, curValue );
                                         }
-                                                        free (curKey);
+                                        free (curKey);
                                         curKey = curValue = NULL;
                                         BEGIN(INITIAL);
                                     }

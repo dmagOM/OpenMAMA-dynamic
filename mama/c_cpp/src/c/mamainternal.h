@@ -22,7 +22,12 @@
 #ifndef MamaInternalH__
 #define MamaInternalH__
 
+#include <wombat/wtable.h>
+
 #include <property.h>
+#include <functiontable.h>
+#include <librarymanagerinternal.h>
+#include <mama/loadcallbacks.h>
 #include "mama/types.h"
 
 #if defined(__cplusplus)
@@ -31,6 +36,43 @@ extern "C"
 #endif
 
 #define MAMA_PAYLOAD_MAX	CHAR_MAX
+
+/**
+ * This structure contains data needed to control starting and stopping of
+ * mama.
+ */
+typedef struct mamaImpl_
+{
+    /* wtable of mamaBridgeLib structures. */
+    wtable_t               mBridges;
+
+    /* wtable of mamaPayloadLib structures */
+    wtable_t               mPayloads;
+
+    /* wtable of payload ID to payload string names */
+    wtable_t               mPayloadIdMap;
+
+    /* wtable of mamaPluginLib structures */
+    wtable_t               mPlugins;
+
+    /**
+     * Pointer to a structure containing the various function tables which may
+     * be used by Mama:
+     * - Callbacks for bridge loading management.
+     * - Plugin integration points.
+     */
+    mamaFunctionTable      *mFunctionTable;
+
+    /* Flag noting if the mamaImpl has been initialised. 
+     * TODO: We currently lock around the initialisation of all of this,
+     * but it would probably be cleaner to use a wInterlocked. The problem
+     * is where/how do we initialize it.
+     */
+    unsigned int           mInit;
+    unsigned int           myRefCount;
+    wthread_static_mutex_t myLock;
+} mamaImpl;
+
 /**
 * Check whether Callbacks are run in 'debug' catch exceptions mode
 */
@@ -84,8 +126,51 @@ mamaInternal_findPayload (char id);
 mamaPayloadBridge
 mamaInternal_getDefaultPayload (void);
 
+void
+mamaInternal_setDefaultPayload (mamaPayloadBridge payloadBridge);
+
 mama_bool_t
 mamaInternal_getAllowMsgModify (void);
+
+/**
+ * @brief Performs required initialisation for the OpenMAMA global structures.
+ *
+ * Initialises the various tables and other structures which OpenMAMA uses to
+ * maintain it's global state.
+ *
+ * @return Status indicating the success or failure of the initialisation.
+ */
+mama_status
+mamaInternal_init (void);
+
+/**
+ * @brief Function for returning a pointer to the global mamaImpl object.
+ *
+ * Returns a pointer to the global mamaImpl object, gImpl.
+ *
+ * @return A mamaImpl pointer to the gImpl object.
+ */
+mamaImpl *
+mamaInternal_getGlobalImpl (void);
+
+
+/**
+ * @brief compares the MAMA version in the supplied string with the current version
+ *
+ * Perform a comparison between a MAMA version derived from the supplied NULL
+ * terminated string and the current version of OpenMAMA. 
+ *  - If the supplied version is greater than the current version, return a
+ *    value of 1.
+ *  - If the two versions are the same, return a value of 0. 
+ *  - If the supplied version is less than the current version, return a -1.
+ *
+ * @param[in] version A NULL terminated string representation of the MAMA version
+ *            for which the comparison is to be performed.
+ *
+ * @return An integer value representing the result of the comparison.
+ */
+int
+mamaInternal_compareMamaVersion (const char *version);
 
 #if defined(__cplusplus)
 }
