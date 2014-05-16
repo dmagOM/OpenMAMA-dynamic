@@ -1,8 +1,13 @@
+## THIS REPO IS PURELY FOR POC PURPOSES
+## IT IS NOT TESTED, IT WILL NOT BE SUPPORTED, AND IS VERY UNLIKELY TO BE KEPT UP TO DATE
+
+Seriously, this is purely some experimental POC work, and won't be supported.
+If it even builds, you're doing well.
+
 OpenMAMA Client Library
 ============================
 
-Release: 2.3.0
-Change Log: http://git.openmama.org/?p=OpenMAMA.git;a=shortlog;h=refs/tags/OpenMAMA-2.3.0
+Release: POC-NOT-FOR-RELEASE
 
 Project Page
 ------------
