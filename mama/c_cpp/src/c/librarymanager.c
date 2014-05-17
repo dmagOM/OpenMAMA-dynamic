@@ -399,7 +399,7 @@ do {                                                                            
     result = loadLibFunc (bridgeLib, functionName);                             \
                                                                                 \
     if (NULL != result) {                                                       \
-        (*bridge)->FUNCIMPLNAME = (FUNCIMPLTYPE)result;                      \
+        (*bridge)->FUNCIMPLNAME = *(FUNCIMPLTYPE*)&result;                      \
         result = NULL;                                                          \
     } else {                                                                    \
         (*bridge)->FUNCIMPLNAME = (FUNCIMPLTYPE)0xDEADBEEF;                     \
@@ -427,7 +427,7 @@ do {                                                                            
     result = loadLibFunc (bridgeLib, functionName);                             \
                                                                                 \
     if (NULL != result) {                                                       \
-        (*bridge)->FUNCIMPLNAME = (FUNCIMPLTYPE)result;                      \
+        (*bridge)->FUNCIMPLNAME = *(FUNCIMPLTYPE*)&result;                      \
         result = NULL;                                                          \
     } else {                                                                    \
         (*bridge)->FUNCIMPLNAME = (FUNCIMPLTYPE) mamaBase ## FUNCSTRINGNAME;    \
@@ -462,7 +462,7 @@ mamaLibraryManager_registerBridgeFunctions (LIB_HANDLE  bridgeLib,
      */
     snprintf (functionName, 256, "%sBridge_getBridgeProperties", name);
     funcPointer = loadLibFunc(bridgeLib, functionName);
-    propertyFunc    = (bridge_getBridgeProperties)funcPointer;
+    propertyFunc    = *(bridge_getBridgeProperties*)&funcPointer;
 
     if (propertyFunc) {
         mama_log (MAMA_LOG_LEVEL_FINE,
@@ -502,7 +502,7 @@ mamaLibraryManager_registerBridgeFunctions (LIB_HANDLE  bridgeLib,
     /* Initialise the bridge by calling the init function. */
     snprintf (functionName, 256, "%sBridge_createImpl", name);
     funcPointer = loadLibFunc(bridgeLib, functionName);
-    initFunc    = (bridge_createImpl)funcPointer;
+    initFunc    = *(bridge_createImpl*)&funcPointer;
 
     if (!initFunc)
     {
@@ -613,7 +613,7 @@ mamaLibraryManager_registerPayloadFunctions (LIB_HANDLE         bridgeLib,
     /* Initialise the bridge by calling the init function. */
     snprintf (functionName, 256, "%sPayload_createImpl", name);
     funcPointer = loadLibFunc(bridgeLib, functionName);
-    initFunc    = (msgPayload_createImpl)funcPointer;
+    initFunc    = *(msgPayload_createImpl*)&funcPointer;
 
     if (!initFunc)
     {
@@ -692,7 +692,7 @@ do {                                                                            
     if (NULL != result) {                                                       \
         for (i = 0; i < MAX_FUNCTION_CALLBACKS; ++i) {                          \
             if (!FUNCIMPLSTRUCT[i].FUNCIMPLNAME) {                              \
-                FUNCIMPLSTRUCT[i].FUNCIMPLNAME  = (FUNCIMPLTYPE)result;         \
+                FUNCIMPLSTRUCT[i].FUNCIMPLNAME  = *(FUNCIMPLTYPE*)&result;      \
                 FUNCIMPLSTRUCT[i].plugin        = bridge;                       \
                 closureFunc (*bridge,                                           \
                              #FUNCIMPLNAME,                                     \
@@ -736,7 +736,7 @@ mamaLibraryManager_registerPluginFunctions (LIB_HANDLE  bridgeLib,
     /* Initialise the bridge by calling the init function. */
     snprintf (functionName, 256, "%sPlugin_init", name);
     funcPointer = loadLibFunc(bridgeLib, functionName);
-    initFunc    = (mamaPlugin_init)funcPointer;
+    initFunc    = *(mamaPlugin_init*)&funcPointer;
 
     if (!initFunc)
     {
@@ -752,7 +752,7 @@ mamaLibraryManager_registerPluginFunctions (LIB_HANDLE  bridgeLib,
     /* Setup the closure query function. */
     snprintf (functionName, 256, "%sPlugin_queryClosureData", name);
     funcPointer = loadLibFunc(bridgeLib, functionName);
-    closureFunc    = (mamaPlugin_queryClosureData)funcPointer;
+    closureFunc    = *(mamaPlugin_queryClosureData*)&funcPointer;
 
     if (!closureFunc)
     {
